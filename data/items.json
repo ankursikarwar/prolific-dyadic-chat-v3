@@ -16,8 +16,8 @@
     "id": "sample2",
     "user_1_image": "/img/sample_3.jpg",
     "user_2_image": "/img/sample_4.jpg",
-    "user_1_question": "user 1 question",
-    "user_2_question": "user 2 question",
+    "user_1_question": "user 3 question",
+    "user_2_question": "user 4 question",
     "options": [
       "8",
       "12"
