@@ -1,8 +1,8 @@
 [
   {
     "id": "sample1",
-    "user_1_image": "/img/sample.jpg",
-    "user_2_image": "/img/sample.jpg",
+    "user_1_image": "/img/sample_1.jpg",
+    "user_2_image": "/img/sample_2.jpg",
     "user_1_question": "user 1 question",
     "user_2_question": "user 2 question",
     "options": [
@@ -14,8 +14,8 @@
   },
   {
     "id": "sample2",
-    "user_1_image": "/img/sample.jpg",
-    "user_2_image": "/img/sample.jpg",
+    "user_1_image": "/img/sample_3.jpg",
+    "user_2_image": "/img/sample_4.jpg",
     "user_1_question": "user 1 question",
     "user_2_question": "user 2 question",
     "options": [
