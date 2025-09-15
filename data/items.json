@@ -1,8 +1,10 @@
 [
   {
     "id": "sample1",
-    "image_url": "/img/sample.jpg",
-    "goal_question": "How many total shelves are visible across all bookcases?",
+    "user_1_image": "/img/sample.jpg",
+    "user_2_image": "/img/sample.jpg",
+    "user_1_question": "user 1 question",
+    "user_2_question": "user 2 question",
     "options": [
       "8",
       "9",
@@ -12,13 +14,13 @@
   },
   {
     "id": "sample2",
-    "image_url": "/img/sample.jpg",
-    "goal_question": "What color is the door handle?",
+    "user_1_image": "/img/sample.jpg",
+    "user_2_image": "/img/sample.jpg",
+    "user_1_question": "user 1 question",
+    "user_2_question": "user 2 question",
     "options": [
-      "Silver",
-      "Gold",
-      "Black",
-      "White"
+      "8",
+      "12"
     ]
-  }
+  },
 ]
