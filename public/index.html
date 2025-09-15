@@ -13,7 +13,7 @@
     <!-- Local plugins -->
     <script src="/plugins/jspsych-survey-html-form-lite.js?v=v7class"></script>
     <script src="/plugins/jspsych-instructions-lite.js?v=v7class"></script>
-    <script src="/plugins/jspsych-dyadic-chat.js?v=vG6h-uipatch3d"></script>
+    <script src="/plugins/jspsych-dyadic-chat.js?v=partnerend-v1"></script>
 
     <style>
       body { margin:0; background:#000; color:#fff; font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
@@ -49,53 +49,31 @@
         </div>`;
 
       const INSTRUCTIONS_PAGE_HTML = `\
-        <div class="instr instr-aesthetic" style="margin-top:28px;">
-          <style>
-            .instr-aesthetic .nice { margin: 0; padding-left: 1.2em; line-height: 1.6; }
-            .instr-aesthetic li { margin: 6px 0; }
-            .instr-aesthetic ol[type="a"] { margin-top: 6px; }
-            .instr-aesthetic h2 { margin-bottom: 10px; }
-            .instr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 26px 0 18px 0; }
-            .instr-ph {
-              background: #0e0e10;
-              border: 1px solid #555;
-              border-radius: 10px;
-              height: 260px;
-              color: #cfcfcf;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 16px;
-              letter-spacing: 0.2px;
-            }
-            @media (max-width: 900px) {
-              .instr-grid { grid-template-columns: 1fr; }
-              .instr-ph { height: 200px; }
-            }
-          </style>
-          <h2>Instructions</h2>
-          <ol class="nice">
-            <li>You and your partner will each see different views of the same room.</li>
-            <li>You have to chat and collaborate with your partner in order to solve the question correctly.</li>
-            <li>You can submit an answer only after the required number of turns is completed.</li>
-            <li>Strict turn-taking:
-              <ol type="a">
-                <li>Send a message only after your partner replies.</li>
-                <li>No two consecutive messages from the same person.</li>
-              </ol>
-            </li>
-            <li>You may zoom in on the image to inspect details.</li>
-            <li>After the turns are completed, select the option you think is correct and click “Submit Answer”.</li>
-            <li>Do not share personal information.</li>
-          </ol>
 
-          <div class="instr-grid">
-            <div class="instr-ph">PlaceHolder Image 1</div>
-            <div class="instr-ph">PlaceHolder Image 2</div>
-          </div>
-
-          <p>Click "Start chat" when you are ready.</p>
-        </div>
+<div class="instr instr-aesthetic instr-page-top" style="margin-top: 28px;">
+  <style>
+    .instr-aesthetic .nice { margin: 0; padding-left: 1.2em; line-height: 1.6; }
+    .instr-aesthetic li { margin: 6px 0; }
+    .instr-aesthetic ol[type="a"] { margin-top: 6px; }
+    .instr-aesthetic h2 { margin-bottom: 10px; }
+  </style>
+  <h2>Instructions</h2>
+  <ol class="nice">
+    <li>You and your partner will each see different views of the same room.</li>
+    <li>You have to chat and collaborate with your partner in order to solve the question correctly.</li>
+    <li>You can submit an answer only after the required number of turns is completed.</li>
+    <li>Strict turn-taking:
+      <ol type="a">
+        <li>Send a message only after your partner replies.</li>
+        <li>No two consecutive messages from the same person.</li>
+      </ol>
+    </li>
+    <li>You may zoom in on the image to inspect details.</li>
+    <li>After the turns are completed, select the option you think is correct and click “Submit Answer”.</li>
+    <li>Do not share personal information.</li>
+  </ol>
+  <p>Click "Start chat" when you are ready.</p>
+</div>
 `;
 const SIDEBAR_INSTR_HTML = `\
 <div class="instr instr-aesthetic">

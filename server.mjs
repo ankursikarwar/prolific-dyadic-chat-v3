@@ -11,6 +11,7 @@ const io = new Server(server, { cors: { origin: '*' } });
 
 const PORT = process.env.PORT || 3000;
 const MAX_TURNS = Number(process.env.MAX_TURNS || 10); // one turn = two messages (both users)
+const REQUIRE_DISTINCT_PID = process.env.REQUIRE_DISTINCT_PID !== '0';
 const BLOCK_REPEAT_PID = String(process.env.BLOCK_REPEAT_PID || 'false').toLowerCase() === 'true';
 const STOP_WHEN_DECK_COMPLETE = String(process.env.STOP_WHEN_DECK_COMPLETE || 'true').toLowerCase() !== 'false';
 
@@ -97,7 +98,7 @@ io.on('connection', (socket) => {
   tryPair();
 
   socket.on('disconnect', () => {
-    const qi = queue.indexOf(socket);
+const qi = queue.indexOf(socket);
     if (qi >= 0) queue.splice(qi, 1);
     const roomId = socket.currentRoom;
     if (roomId && rooms.has(roomId)){
@@ -109,9 +110,25 @@ io.on('connection', (socket) => {
         rooms.delete(roomId);
       }
     }
-  });
-
-  socket.on('chat:message', (msg={}) => {
+  
+    // Notify partner that the session ended due to disconnect
+    const r = socket.currentRoom;
+    if (r && rooms.has(r)){
+      const room = rooms.get(r);
+      const other = room.users.find(u => u.id !== socket.id);
+      if (other){
+        try { io.to(other.id).emit('end:partner'); } catch(e) {}
+      }
+      // mark this user as finished and persist if both finished
+      room.finished[socket.id] = true;
+      const [a,b] = room.users;
+      if (room.finished[a.id] && room.finished[b.id]){
+        try { persistRoom(room); } catch {}
+        rooms.delete(r);
+      }
+    }
+});
+socket.on('chat:message', (msg={}) => {
     const roomId = socket.currentRoom;
     if (!roomId || !rooms.has(roomId)) return;
     const room = rooms.get(roomId);
@@ -161,7 +178,8 @@ io.on('connection', (socket) => {
     if (queue.length >= 2){
       const a = queue.shift();
       const b = queue.shift();
-      const roomId = 'r_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+            if (REQUIRE_DISTINCT_PID && a?.prolific?.PID === b?.prolific?.PID) { queue.unshift(a); queue.push(b); return; }
+const roomId = 'r_' + Date.now() + '_' + Math.floor(Math.random()*9999);
       a.join(roomId); b.join(roomId);
       a.currentRoom = roomId; b.currentRoom = roomId;
 
