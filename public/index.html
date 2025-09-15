@@ -13,7 +13,7 @@
     <!-- Local plugins -->
     <script src="/plugins/jspsych-survey-html-form-lite.js?v=v7class"></script>
     <script src="/plugins/jspsych-instructions-lite.js?v=v7class"></script>
-    <script src="/plugins/jspsych-dyadic-chat.js?v=partnerend-v1"></script>
+    <script src="/plugins/jspsych-dyadic-chat.js?v=vG6h-uipatch3d"></script>
 
     <style>
       body { margin:0; background:#000; color:#fff; font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
@@ -33,6 +33,8 @@
   <body>
     <script>
       const jsPsych = initJsPsych();
+      const __qp = new URLSearchParams(location.search);
+      const pidFromUrl = __qp.get('PID') || __qp.get('PROLIFIC_PID') || 'DEBUG_LOCAL';
 
       const CONSENT_HTML = `
         <div class="consent-box">
@@ -106,7 +108,7 @@ const consentTrial = { type: jsPsychSurveyHtmlForm, html: CONSENT_HTML, button_l
       const chatTrial = {
         type: jsPsychDyadicChat,
         socketUrl: window.location.origin,
-        prolific: { PID: 'DEBUG_LOCAL' },
+        prolific: { PID: pidFromUrl },
         min_turns: 10,
         goal_question: '',
         answer_options: ['A','B','C','D'],

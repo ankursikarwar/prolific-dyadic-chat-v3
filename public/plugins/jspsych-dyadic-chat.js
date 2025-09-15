@@ -329,12 +329,10 @@
       socket.on('turn:wait', function(){ myTurn = false; updateTurns(); });
       socket.on('chat:closed', function(){ chatClosed = true; updateTurns(); });
       socket.on('end:partner', function(){
-  try { display_element.innerHTML = '<div style=\"padding:40px; font-size:20px; text-align:center;\">'
-    + 'Your partner disconnected or closed the tab. This session has ended.'
-    + '</div>'; } catch(e){}
-  try { window.jsPsych.finishTrial({ ended: 'partner_disconnect' }); } catch(e){}
-});
-socket.on('end:self', function(){
+        try { display_element.innerHTML = '<div style="padding:40px; font-size:20px; text-align:center;">Your partner disconnected or closed the tab. This session has ended.</div>'; } catch(e){}
+        try { window.jsPsych.finishTrial({ ended: 'partner_disconnect' }); } catch(e){}
+      });
+      socket.on('end:self', function(){
         display_element.innerHTML = '<div style="padding:40px; font-size:20px;">Thanks! Your response was submitted. You may close the tab.</div>';
         try { window.jsPsych.finishTrial({ turns: Math.floor(msgCount/2), ended:'self' }); } catch {}
       });
