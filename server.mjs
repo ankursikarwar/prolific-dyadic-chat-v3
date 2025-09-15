@@ -103,8 +103,6 @@ io.on('connection', (socket) => {
     const roomId = socket.currentRoom;
     if (roomId && rooms.has(roomId)){
       const room = rooms.get(roomId);
-      // notify partner
-      try { const other = room.users.find(u => u.id !== socket.id); if (other) io.to(other.id).emit('end:partner'); } catch(e){}
       room.finished[socket.id] = true;
       const [u1, u2] = room.users;
       if (room.finished[u1.id] && room.finished[u2.id]){
@@ -161,52 +159,34 @@ io.on('connection', (socket) => {
   });
 
   function tryPair(){
-    if (queue.length < 2) return;
-    // Find first valid pair (distinct PIDs when required)
-    let i = -1, j = -1;
-    for (let aIdx = 0; aIdx < queue.length - 1; aIdx++){
-      const a = queue[aIdx];
-      if (!a || a.disconnected) continue;
-      for (let bIdx = aIdx + 1; bIdx < queue.length; bIdx++){
-        const b = queue[bIdx];
-        if (!b || b.disconnected) continue;
-        if (a.id === b.id) continue;
-        if (REQUIRE_DISTINCT_PID && (a.prolific && b.prolific) && (a.prolific.PID === b.prolific.PID)) continue;
-        i = aIdx; j = bIdx; break;
-      }
-      if (i !== -1) break;
+    if (queue.length >= 2){
+      const a = queue.shift();
+      const b = queue.shift();
+            if (REQUIRE_DISTINCT_PID && a?.prolific?.PID === b?.prolific?.PID) { queue.unshift(a); queue.push(b); return; }
+const roomId = 'r_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+      a.join(roomId); b.join(roomId);
+      a.currentRoom = roomId; b.currentRoom = roomId;
+
+      const item = nextItem();
+      try { markPidSeen(a.prolific.PID); markPidSeen(b.prolific.PID); } catch {}
+
+      const room = {
+        id: roomId, users:[a,b], item,
+        messages:[], answers:{}, finished:{},
+        msgCount:0, chatClosed:false, minTurns: MAX_TURNS,
+        nextSenderId:null, pairedAt: Date.now()
+      };
+      rooms.set(roomId, room);
+
+      io.to(a.id).emit('paired', { roomId, item: { ...item, image_url: item.user_1_image, goal_question: item.user_1_question }, min_turns: MAX_TURNS });
+    io.to(b.id).emit('paired', { roomId, item: { ...item, image_url: item.user_2_image, goal_question: item.user_2_question }, min_turns: MAX_TURNS });
+      const starter = Math.random() < 0.5 ? a : b;
+      room.nextSenderId = starter.id;
+      io.to(starter.id).emit('turn:you');
+      io.to((starter.id===a.id)?b.id:a.id).emit('turn:wait');
     }
-    if (i === -1 || j === -1) return;
-
-    const a = queue[i];
-    const b = queue[j];
-    // Remove from queue: remove higher index first to avoid shifting problems
-    queue.splice(j, 1);
-    queue.splice(i, 1);
-
-    const roomId = 'r_' + Date.now() + '_' + Math.floor(Math.random()*9999);
-    a.join(roomId); b.join(roomId);
-    a.currentRoom = roomId; b.currentRoom = roomId;
-
-    const item = nextItem();
-    try { markPidSeen(a.prolific.PID); markPidSeen(b.prolific.PID); } catch {}
-
-    const room = {
-      id: roomId, users:[a,b], item,
-      messages:[], answers:{}, finished:{},
-      msgCount:0, chatClosed:false, minTurns: MAX_TURNS,
-      nextSenderId:null, pairedAt: Date.now()
-    };
-    rooms.set(roomId, room);
-
-    io.to(roomId).emit('paired', { roomId, item, min_turns: MAX_TURNS });
-    const starter = Math.random() < 0.5 ? a : b;
-    room.nextSenderId = starter.id;
-    io.to(starter.id).emit('turn:you');
-    io.to((starter.id===a.id)?b.id:a.id).emit('turn:wait');
   }
-}
-);
+});
 
 function persistRoom(room){
   try {
